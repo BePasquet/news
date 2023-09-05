@@ -10,6 +10,7 @@ import { parseAxiosError } from 'src/app/core/parsers/parse-axios-error';
 import { AppThunk } from 'src/app/core/redux/interfaces/app-thunk.interface';
 import { Article } from '../data/interfaces/article.interface';
 import * as newsService from '../services/news.service';
+import { HeadlinesFilter } from '../services/news.service';
 
 export const NEWS_STATE_KEY = 'news';
 
@@ -19,7 +20,7 @@ export interface PartialNewsState {
   [NEWS_STATE_KEY]: NewsState;
 }
 
-export const getNews = createAction<{ query: string }>('[News] Get News');
+export const getNews = createAction<HeadlinesFilter>('[News] Get News');
 
 export const getNewsSuccess = createAction<Article[]>(
   '[News] Get News Success'
@@ -32,7 +33,7 @@ export type NewsActions = ReturnType<
 >;
 
 export const newsEntityAdapter = createEntityAdapter<Article>({
-  selectId: ({ url }) => url,
+  selectId: ({ title }) => title,
 });
 
 export const newsInitialState: NewsState = newsEntityAdapter.getInitialState({
@@ -54,6 +55,7 @@ export const newsReducer = createReducer(newsInitialState, (builder) =>
     })
     .addCase(getNewsFail, (state, { payload }) => {
       state.loading = false;
+      state.loaded = true;
       state.error = payload;
     })
 );
@@ -86,12 +88,12 @@ export const selectNewsError = createSelector(
 );
 
 export function getNewsThunk(
-  query: string
+  params: HeadlinesFilter = {}
 ): AppThunk<PartialNewsState, NewsActions> {
   return async (dispatch) => {
     try {
-      dispatch(getNews({ query }));
-      const { articles } = await newsService.getTopHeadlines(query);
+      dispatch(getNews(params));
+      const { articles } = await newsService.getTopHeadlines(params);
       dispatch(getNewsSuccess(articles));
     } catch (e) {
       const error = parseAxiosError(e);

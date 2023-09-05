@@ -1,7 +1,5 @@
-import { Source } from './source.interface';
-
 export interface Article {
-  source: Source;
+  source: { id: string; name: string };
   author: string | null;
   title: string;
   description: string;

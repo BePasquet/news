@@ -1,20 +1,52 @@
-import { newsApi } from 'src/app/core/apis/news-api';
-import { TopHeadlinesResponse } from '../data/interfaces/top-headlines-response';
+import axios from 'axios';
+import { SourcesResponse } from '../data/interfaces/sources-response.interface';
+import { TopHeadlinesResponse } from '../data/interfaces/top-headlines-response.interface';
 
-export async function getTopHeadlines(
-  query: string
-): Promise<TopHeadlinesResponse> {
+export const newsApi = axios.create({
+  baseURL: 'https://newsapi.org/v2',
+});
+
+newsApi.interceptors.request.use((request) => ({
+  ...request,
+  params: {
+    ...request.params,
+    apiKey: '099148be22804e849a0c6fe022b7cf5e',
+  },
+}));
+
+export interface HeadlinesFilter {
+  query?: string;
+  sources?: string;
+  country?: string;
+}
+
+export async function getTopHeadlines({
+  query = '',
+  sources = '',
+  country = 'us',
+}: HeadlinesFilter): Promise<TopHeadlinesResponse> {
   const queryParams = new URLSearchParams();
-
-  queryParams.append('country', 'us');
 
   if (query) {
     queryParams.append('query', query);
   }
 
+  // API requires sources or country
+  if (sources) {
+    queryParams.append('sources', 'abc-news');
+  } else {
+    queryParams.append('country', country);
+  }
+
   const { data } = await newsApi.get<TopHeadlinesResponse>(
     `/top-headlines?${queryParams.toString()}`
   );
+
+  return data;
+}
+
+export async function getSources(): Promise<SourcesResponse> {
+  const { data } = await newsApi.get<SourcesResponse>(`/sources`);
 
   return data;
 }

@@ -1,5 +1,7 @@
+import { Provider } from 'react-redux';
 import { createGlobalStyle } from 'styled-components';
 import { AppRoutes } from './app-routes';
+import { store } from './core/redux/store';
 
 const GlobalStyles = createGlobalStyle`
 html, body {
@@ -13,7 +15,9 @@ export function AppProviders() {
   return (
     <>
       <GlobalStyles />
-      <AppRoutes />
+      <Provider store={store}>
+        <AppRoutes />
+      </Provider>
     </>
   );
 }

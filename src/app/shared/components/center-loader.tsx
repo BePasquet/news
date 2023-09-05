@@ -1,5 +1,5 @@
 import { CircularProgress } from '@mui/material';
-import styled from 'styled-components';
+import { CenterContainer } from './center-container';
 
 export function CenterLoader() {
   return (
@@ -8,10 +8,3 @@ export function CenterLoader() {
     </CenterContainer>
   );
 }
-
-const CenterContainer = styled.div`
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;

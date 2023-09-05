@@ -31,7 +31,9 @@ export type NewsActions = ReturnType<
   typeof getNews | typeof getNewsSuccess | typeof getNewsFail
 >;
 
-export const newsEntityAdapter = createEntityAdapter<Article>();
+export const newsEntityAdapter = createEntityAdapter<Article>({
+  selectId: ({ url }) => url,
+});
 
 export const newsInitialState: NewsState = newsEntityAdapter.getInitialState({
   loading: false,
@@ -62,6 +64,11 @@ export const selectNewsState = (state: PartialNewsState) =>
   state[NEWS_STATE_KEY];
 
 export const selectNews = createSelector(selectNewsState, selectAll);
+
+// API brings news that has been removed without content
+export const selectExistingNews = createSelector(selectNews, (news) =>
+  news.filter(({ title }) => title !== '[Removed]')
+);
 
 export const selectNewsLoading = createSelector(
   selectNewsState,

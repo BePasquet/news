@@ -1,33 +1,40 @@
-import { ArrowOutward } from '@mui/icons-material';
+import { ArrowOutward, Edit } from '@mui/icons-material';
 import { Card, Typography } from '@mui/material';
 import styled from 'styled-components';
 import { Article } from '../data/interfaces/article.interface';
 
 export interface ArticleCardProps {
   article: Article;
-  onClick?: (article: Article) => void;
+  onNavigateClick: (article: Article) => void;
+  onEditClick: (article: Article) => void;
 }
 
-export function ArticleCard({ article, onClick }: ArticleCardProps) {
+export function ArticleCard({
+  article,
+  onNavigateClick,
+  onEditClick,
+}: ArticleCardProps) {
   const publishedAt = new Date(article.publishedAt).toLocaleDateString('en');
   const title =
     article.title.length > 100
       ? article.title.slice(0, 100).concat('...')
       : article.title;
 
+  const handleNavigation = () => onNavigateClick(article);
+
+  const handleEdit = () => onEditClick(article);
+
   return (
     <CardContainer style={{ backgroundImage: `url('${article.urlToImage}')` }}>
       <OverLayContainer>
         <ButtonContainer>
-          <NavigateButton
-            onClick={() => {
-              if (onClick) {
-                onClick(article);
-              }
-            }}
-          >
+          <IconButton onClick={handleEdit}>
+            <Edit fontSize="medium" />
+          </IconButton>
+
+          <IconButton onClick={handleNavigation}>
             <ArrowOutward fontSize="medium" />
-          </NavigateButton>
+          </IconButton>
         </ButtonContainer>
 
         <div>
@@ -68,10 +75,10 @@ const OverLayContainer = styled.div`
 
 const ButtonContainer = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 `;
 
-const NavigateButton = styled.button`
+const IconButton = styled.button`
   border: none;
   background-color: transparent;
   padding: 0;

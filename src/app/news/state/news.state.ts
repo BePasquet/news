@@ -28,8 +28,16 @@ export const getNewsSuccess = createAction<Article[]>(
 
 export const getNewsFail = createAction<string>('[News] Get News Fail');
 
+export const updateArticle = createAction<{
+  id: string;
+  article: Article;
+}>('[News] Update Article');
+
 export type NewsActions = ReturnType<
-  typeof getNews | typeof getNewsSuccess | typeof getNewsFail
+  | typeof getNews
+  | typeof getNewsSuccess
+  | typeof getNewsFail
+  | typeof updateArticle
 >;
 
 export const newsEntityAdapter = createEntityAdapter<Article>({
@@ -58,6 +66,12 @@ export const newsReducer = createReducer(newsInitialState, (builder) =>
       state.loaded = true;
       state.error = payload;
     })
+    .addCase(updateArticle, (state, { payload: { id, article } }) =>
+      newsEntityAdapter.updateOne(state, {
+        id,
+        changes: article,
+      })
+    )
 );
 
 const { selectAll, selectEntities } = newsEntityAdapter.getSelectors();

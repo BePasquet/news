@@ -4,12 +4,12 @@ import { useParams } from 'react-router-dom';
 import { FlexColumnContainer } from 'src/app/shared/components/flex-column-container';
 import { WarningMessage } from 'src/app/shared/components/warning-message';
 import styled from 'styled-components';
-import { selectNewsEntities } from '../state/news.state';
+import { selectNews } from '../state/news.state';
 
 export function NewsDetail() {
   const { title } = useParams();
-  const entities = useSelector(selectNewsEntities);
-  const article = entities[title ?? ''];
+  const articles = useSelector(selectNews);
+  const article = articles.find((x) => x.title === title);
 
   if (!article) {
     return (

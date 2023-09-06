@@ -1,10 +1,4 @@
-import {
-  EntityState,
-  createAction,
-  createEntityAdapter,
-  createReducer,
-  createSelector,
-} from '@reduxjs/toolkit';
+import { createAction, createReducer, createSelector } from '@reduxjs/toolkit';
 import { BaseState } from 'src/app/core/interfaces/base-state.interface';
 import { parseAxiosError } from 'src/app/core/parsers/parse-axios-error';
 import { AppThunk } from 'src/app/core/redux/interfaces/app-thunk.interface';
@@ -14,7 +8,7 @@ import { HeadlinesFilter } from '../services/news.service';
 
 export const NEWS_STATE_KEY = 'news';
 
-export type NewsState = EntityState<Article> & BaseState;
+export type NewsState = BaseState & { data: Article[] };
 
 export interface PartialNewsState {
   [NEWS_STATE_KEY]: NewsState;
@@ -43,15 +37,12 @@ export type NewsActions = ReturnType<
   | typeof getNewsCancelled
 >;
 
-export const newsEntityAdapter = createEntityAdapter<Article>({
-  selectId: ({ title }) => title,
-});
-
-export const newsInitialState: NewsState = newsEntityAdapter.getInitialState({
+export const newsInitialState: NewsState = {
+  data: [],
   loading: false,
   loaded: false,
   error: '',
-});
+};
 
 export const newsReducer = createReducer(newsInitialState, (builder) =>
   builder
@@ -62,35 +53,27 @@ export const newsReducer = createReducer(newsInitialState, (builder) =>
       state.loading = false;
       state.loaded = true;
       state.error = '';
-      newsEntityAdapter.setAll(state, payload);
+      state.data = payload;
     })
     .addCase(getNewsFail, (state, { payload }) => {
       state.loading = false;
       state.loaded = true;
       state.error = payload;
     })
-    .addCase(updateArticle, (state, { payload: { id, article } }) =>
-      newsEntityAdapter.updateOne(state, {
-        id,
-        changes: article,
-      })
-    )
+    .addCase(updateArticle, (state, { payload: { id, article } }) => {
+      state.data = state.data.map((news) =>
+        news.title === id ? article : news
+      );
+    })
     .addCase(getNewsCancelled, (state) => {
       state.loading = false;
     })
 );
 
-const { selectAll, selectEntities } = newsEntityAdapter.getSelectors();
-
 export const selectNewsState = (state: PartialNewsState) =>
   state[NEWS_STATE_KEY];
 
-export const selectNews = createSelector(selectNewsState, selectAll);
-
-export const selectNewsEntities = createSelector(
-  selectNewsState,
-  selectEntities
-);
+export const selectNews = createSelector(selectNewsState, ({ data }) => data);
 
 // API brings news that has been removed without content
 export const selectExistingNews = createSelector(selectNews, (news) =>

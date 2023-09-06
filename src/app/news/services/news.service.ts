@@ -20,15 +20,14 @@ export interface HeadlinesFilter {
   country?: string;
 }
 
-export async function getTopHeadlines({
-  query = '',
-  sources = '',
-  country = 'us',
-}: HeadlinesFilter): Promise<TopHeadlinesResponse> {
+export async function getTopHeadlines(
+  { query = '', sources = '', country = 'us' }: HeadlinesFilter,
+  signal?: AbortSignal
+): Promise<TopHeadlinesResponse> {
   const queryParams = new URLSearchParams();
 
   if (query) {
-    queryParams.append('query', query);
+    queryParams.append('q', query);
   }
 
   // API requires sources or country
@@ -39,7 +38,10 @@ export async function getTopHeadlines({
   }
 
   const { data } = await newsApi.get<TopHeadlinesResponse>(
-    `/top-headlines?${queryParams.toString()}`
+    `/top-headlines?${queryParams.toString()}`,
+    {
+      signal: signal,
+    }
   );
 
   return data;

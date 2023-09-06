@@ -1,6 +1,6 @@
 import { Search } from '@mui/icons-material';
-import { InputAdornment, TextField } from '@mui/material';
 import { ChangeEvent, useRef, useState } from 'react';
+import styled from 'styled-components';
 
 export interface SearchBarProps {
   initialValue: string;
@@ -33,17 +33,36 @@ export function SearchBar({
   };
 
   return (
-    <TextField
-      value={value}
-      onChange={handleChange}
-      InputProps={{
-        startAdornment: (
-          <InputAdornment position="start">
-            <Search />
-          </InputAdornment>
-        ),
-      }}
-      variant="standard"
-    />
+    <SearchBarContainer>
+      <SearchInput value={value} onChange={handleChange} />
+      <IconContainer>
+        <Search fontSize="small" />
+      </IconContainer>
+    </SearchBarContainer>
   );
 }
+
+const SearchBarContainer = styled.div`
+  position: relative;
+`;
+
+const SearchInput = styled.input`
+  background-color: #fff;
+  border: none;
+  padding: 10px 30px 10px 8px;
+  border-radius: 20px;
+  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+
+  outline: none;
+`;
+
+const IconContainer = styled.div`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+
+  svg {
+    fill: #000;
+  }
+`;

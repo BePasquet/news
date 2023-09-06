@@ -9,8 +9,10 @@ export interface WarningMessageProps {
 export function WarningMessage({ message }: WarningMessageProps) {
   return (
     <CenterContainer>
-      <Info fontSize="large" />
-      <Typography variant="h6">{message}</Typography>
+      <Info fontSize="large" sx={{ color: '#111' }} />
+      <Typography variant="h6" sx={{ marginTop: '10px' }}>
+        {message}
+      </Typography>
     </CenterContainer>
   );
 }

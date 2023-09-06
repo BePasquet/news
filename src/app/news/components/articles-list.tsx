@@ -8,6 +8,7 @@ import { Results } from 'src/app/shared/components/results';
 import { WarningMessage } from 'src/app/shared/components/warning-message';
 import styled from 'styled-components';
 import { Article } from '../data/interfaces/article.interface';
+import { addToHistory } from '../state/history.state';
 import {
   selectExistingNews,
   selectNewsError,
@@ -29,8 +30,13 @@ export function ArticlesList() {
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
 
   const handleNavigateClick = useCallback(
-    (article: Article) => navigate(`/news/${article.title}`),
-    [navigate]
+    (article: Article) => {
+      const visitedAt = new Date().toISOString();
+      dispatch(addToHistory({ ...article, visitedAt }));
+
+      navigate(`/news/${article.title}`);
+    },
+    [navigate, dispatch]
   );
 
   const handleEditClick = useCallback((article: Article) => {

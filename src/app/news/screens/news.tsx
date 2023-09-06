@@ -4,6 +4,7 @@ import { useDispatch } from 'src/app/core/redux/redux-hooks';
 
 import { FlexColumnContainer } from 'src/app/shared/components/flex-column-container';
 import styled from 'styled-components';
+import { ArticleHistory } from '../components/article-history';
 import { ArticlesList } from '../components/articles-list';
 import { SearchBar } from '../components/search-bar';
 import { SourceFilter } from '../components/sources-filter';
@@ -41,11 +42,17 @@ export function News() {
       <AppBar position="relative">
         <NewsToolbar>
           <Typography variant="h5">News</Typography>
-          <SearchBar
-            initialValue={filter.query}
-            onChange={handleQueryChange}
-            debounceTime={300}
-          />
+          <ToolbarActionsContainer>
+            <SearchBar
+              initialValue={filter.query}
+              onChange={handleQueryChange}
+              debounceTime={300}
+            />
+
+            <div style={{ marginLeft: '10px' }}>
+              <ArticleHistory />
+            </div>
+          </ToolbarActionsContainer>
         </NewsToolbar>
       </AppBar>
 
@@ -89,6 +96,11 @@ const ArticleListContainer = styled(FlexColumnContainer)`
 
 const SourcesContainer = styled(FlexColumnContainer)`
   padding: 10px;
+`;
+
+const ToolbarActionsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
 `;
 
 export default News;

@@ -4,7 +4,7 @@ import { CenterLoader } from './center-loader';
 import { WarningMessage } from './warning-message';
 
 export interface ResultsProps<T = unknown> extends Omit<BaseState, 'loaded'> {
-  data: T;
+  data?: T;
 }
 
 export function Results({

@@ -60,12 +60,17 @@ export const newsReducer = createReducer(newsInitialState, (builder) =>
     })
 );
 
-const { selectAll } = newsEntityAdapter.getSelectors();
+const { selectAll, selectEntities } = newsEntityAdapter.getSelectors();
 
 export const selectNewsState = (state: PartialNewsState) =>
   state[NEWS_STATE_KEY];
 
 export const selectNews = createSelector(selectNewsState, selectAll);
+
+export const selectNewsEntities = createSelector(
+  selectNewsState,
+  selectEntities
+);
 
 // API brings news that has been removed without content
 export const selectExistingNews = createSelector(selectNews, (news) =>

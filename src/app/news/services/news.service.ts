@@ -1,16 +1,17 @@
 import axios from 'axios';
+import { environment } from 'src/environments/environment';
 import { SourcesResponse } from '../data/interfaces/sources-response.interface';
 import { TopHeadlinesResponse } from '../data/interfaces/top-headlines-response.interface';
 
 export const newsApi = axios.create({
-  baseURL: 'https://newsapi.org/v2',
+  baseURL: environment.NEWS_API_URI,
 });
 
 newsApi.interceptors.request.use((request) => ({
   ...request,
   params: {
     ...request.params,
-    apiKey: '099148be22804e849a0c6fe022b7cf5e',
+    apiKey: environment.NEWS_API_PUBLIC_KEY,
   },
 }));
 

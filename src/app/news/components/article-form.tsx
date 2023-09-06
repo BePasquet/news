@@ -11,7 +11,7 @@ import { Article } from '../data/interfaces/article.interface';
 
 export interface ArticleFormProps {
   initialValue: Article | null;
-  onSubmit: (value: string) => void;
+  onSubmit: (title: string) => void;
   onCancel: () => void;
 }
 
@@ -38,12 +38,7 @@ export function ArticleForm({
 
   return (
     <Form onSubmit={handleSubmit}>
-      <FormControl
-        margin="normal"
-        error={!!error}
-        required={true}
-        variant="standard"
-      >
+      <FormControl error={!!error} required={true} variant="standard">
         <InputLabel>Title</InputLabel>
         <Input value={value} onChange={handleChange} />
         <FormHelperText>{error}</FormHelperText>
@@ -65,13 +60,13 @@ export function ArticleForm({
   );
 }
 
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+`;
+
 const ButtonContainer = styled.div`
   margin-top: 20px;
   display: flex;
   justify-content: flex-end;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
 `;

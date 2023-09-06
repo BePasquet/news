@@ -56,12 +56,7 @@ export function ArticlesList() {
   };
 
   const renderItem = (article: Article, i: number) => (
-    <ArticleCardContainer
-      key={article.url}
-      style={{
-        marginRight: (i + 1) % 4 === 0 ? '0px' : '10px',
-      }}
-    >
+    <ArticleCardContainer key={article.url}>
       <ArticleCard
         article={article}
         onNavigateClick={handleNavigateClick}
@@ -88,7 +83,7 @@ export function ArticlesList() {
         </DialogContent>
       </Dialog>
 
-      <Results loading={loading} error={error} data={news}>
+      <Results loading={loading || !loaded} error={error} data={news}>
         {loaded && news.length ? (
           <ArticlesContainer>{news.map(renderItem)}</ArticlesContainer>
         ) : (
@@ -101,11 +96,25 @@ export function ArticlesList() {
 
 const ArticlesContainer = styled.div`
   display: flex;
+  margin-right: 10px;
   flex-direction: row;
   flex-wrap: wrap;
 `;
 
 const ArticleCardContainer = styled.div`
-  flex: calc((100% - 30px) / 4);
+  width: calc((100% - 40px) / 4);
   margin-bottom: 10px;
+  margin-left: 10px;
+
+  @media screen and (max-width: 900px) {
+    width: calc((100% - 30px) / 3);
+  }
+
+  @media screen and (max-width: 768px) {
+    width: calc((100% - 20px) / 2);
+  }
+
+  @media screen and (max-width: 600px) {
+    width: 100%;
+  }
 `;

@@ -27,16 +27,14 @@ export function SearchBar({
 
     clearTimeout(timeoutIdRef.current);
 
-    timeoutIdRef.current = setTimeout(() => {
-      onChange(newValue);
-    }, debounceTime);
+    timeoutIdRef.current = setTimeout(() => onChange(newValue), debounceTime);
   };
 
   return (
     <SearchBarContainer>
       <SearchInput value={value} onChange={handleChange} />
       <IconContainer>
-        <Search fontSize="small" />
+        <Search sx={{ color: '#111' }} fontSize="small" />
       </IconContainer>
     </SearchBarContainer>
   );
@@ -61,8 +59,4 @@ const IconContainer = styled.div`
   position: absolute;
   top: 8px;
   right: 8px;
-
-  svg {
-    fill: #000;
-  }
 `;

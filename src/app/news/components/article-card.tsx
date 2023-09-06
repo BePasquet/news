@@ -1,7 +1,7 @@
-import { ArrowOutward, Edit } from '@mui/icons-material';
 import { Card, Typography } from '@mui/material';
 import styled from 'styled-components';
 import { Article } from '../data/interfaces/article.interface';
+import { ArticleCardToolbar } from './article-card-toolbar';
 
 export interface ArticleCardProps {
   article: Article;
@@ -16,14 +16,14 @@ export function ArticleCard({
 }: ArticleCardProps) {
   const publishedAt = new Date(article.publishedAt).toLocaleDateString('en');
 
+  const title =
+    article.title.length > 100
+      ? article.title.slice(0, 97).concat('...')
+      : article.title;
+
   const backgroundStyle = article.urlToImage
     ? { backgroundImage: `url('${article.urlToImage}')` }
     : {};
-
-  const title =
-    article.title.length > 100
-      ? article.title.slice(0, 100).concat('...')
-      : article.title;
 
   const handleNavigation = () => onNavigateClick(article);
 
@@ -33,13 +33,10 @@ export function ArticleCard({
     <CardContainer style={backgroundStyle}>
       <OverLayContainer>
         <ButtonContainer>
-          <IconButton onClick={handleEdit}>
-            <Edit fontSize="medium" />
-          </IconButton>
-
-          <IconButton onClick={handleNavigation}>
-            <ArrowOutward fontSize="medium" />
-          </IconButton>
+          <ArticleCardToolbar
+            onNavigateClick={handleNavigation}
+            onEditClick={handleEdit}
+          />
         </ButtonContainer>
 
         <div>
@@ -81,12 +78,4 @@ const OverLayContainer = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
-`;
-
-const IconButton = styled.button`
-  border: none;
-  background-color: transparent;
-  padding: 0;
-  color: #ccc;
-  cursor: pointer;
 `;

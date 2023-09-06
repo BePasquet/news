@@ -22,7 +22,7 @@ export function NewsGuard({ children }: PropsWithChildren) {
   }, [loaded, loading, dispatch]);
 
   return (
-    <Results loading={loading} error={error} data={loaded}>
+    <Results loading={loading || !loaded} error={error} data={loaded}>
       {loaded && children}
     </Results>
   );

@@ -15,6 +15,11 @@ export function ArticleCard({
   onEditClick,
 }: ArticleCardProps) {
   const publishedAt = new Date(article.publishedAt).toLocaleDateString('en');
+
+  const backgroundStyle = article.urlToImage
+    ? { backgroundImage: `url('${article.urlToImage}')` }
+    : {};
+
   const title =
     article.title.length > 100
       ? article.title.slice(0, 100).concat('...')
@@ -25,7 +30,7 @@ export function ArticleCard({
   const handleEdit = () => onEditClick(article);
 
   return (
-    <CardContainer style={{ backgroundImage: `url('${article.urlToImage}')` }}>
+    <CardContainer style={backgroundStyle}>
       <OverLayContainer>
         <ButtonContainer>
           <IconButton onClick={handleEdit}>

@@ -1,6 +1,11 @@
-import { Button, TextField } from '@mui/material';
-import { ChangeEvent, useState } from 'react';
-import { FlexColumnContainer } from 'src/app/shared/components/flex-column-container';
+import {
+  Button,
+  FormControl,
+  FormHelperText,
+  Input,
+  InputLabel,
+} from '@mui/material';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import styled from 'styled-components';
 import { Article } from '../data/interfaces/article.interface';
 
@@ -17,23 +22,46 @@ export function ArticleForm({
 }: ArticleFormProps) {
   const [value, setValue] = useState(initialValue?.title ?? '');
 
+  const error = !value
+    ? 'Please enter a title'
+    : value.length > 255
+    ? 'Please enter a title with less than 255 characters'
+    : null;
+
   const handleChange = (ev: ChangeEvent<HTMLInputElement>) =>
     setValue(ev.target.value);
 
-  const handleSubmit = () => onSubmit(value);
+  const handleSubmit = (ev: FormEvent<HTMLFormElement>) => {
+    ev.preventDefault();
+    onSubmit(value);
+  };
 
   return (
-    <FlexColumnContainer>
-      <TextField value={value} onChange={handleChange} variant="standard" />
+    <Form onSubmit={handleSubmit}>
+      <FormControl
+        margin="normal"
+        error={!!error}
+        required={true}
+        variant="standard"
+      >
+        <InputLabel>Title</InputLabel>
+        <Input value={value} onChange={handleChange} />
+        <FormHelperText>{error}</FormHelperText>
+      </FormControl>
+
       <ButtonContainer>
-        <Button onClick={onCancel} style={{ marginRight: '10px' }}>
+        <Button
+          type="button"
+          onClick={onCancel}
+          style={{ marginRight: '10px' }}
+        >
           Cancel
         </Button>
-        <Button variant="contained" onClick={handleSubmit}>
+        <Button type="submit" variant="contained" disabled={!!error}>
           Save
         </Button>
       </ButtonContainer>
-    </FlexColumnContainer>
+    </Form>
   );
 }
 
@@ -41,4 +69,9 @@ const ButtonContainer = styled.div`
   margin-top: 20px;
   display: flex;
   justify-content: flex-end;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
 `;

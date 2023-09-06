@@ -1,15 +1,13 @@
-import { Done } from '@mui/icons-material';
 import { Chip } from '@mui/material';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'src/app/core/redux/redux-hooks';
 import styled from 'styled-components';
-import { Source } from '../data/interfaces/source.interface';
 import { getSourcesThunk, selectSources } from '../state/sources.state';
 
 export interface SourceFilterProps {
   selectedSource: string;
-  onSourceChange: (source: Source | null) => void;
+  onSourceChange: (sourceId: string) => void;
 }
 
 export function SourceFilter({
@@ -23,28 +21,20 @@ export function SourceFilter({
     dispatch(getSourcesThunk());
   }, [dispatch]);
 
-  const handleAllClick = () => {
-    if (selectedSource === '') {
+  const createChipSourceClick = (sourceId: string) => () => {
+    if (selectedSource === sourceId) {
       return;
     }
 
-    onSourceChange(null);
-  };
-
-  const createChipSourceClick = (source: Source) => () => {
-    if (selectedSource === source.id) {
-      return;
-    }
-
-    onSourceChange(source);
+    onSourceChange(sourceId);
   };
 
   return (
     <SourcesList>
       <Chip
         label="All"
-        onClick={handleAllClick}
-        icon={selectedSource === '' ? <Done /> : undefined}
+        onClick={createChipSourceClick('')}
+        color={selectedSource === '' ? 'primary' : 'default'}
       />
 
       {sources.map((source) => (
@@ -52,8 +42,8 @@ export function SourceFilter({
           style={{ marginLeft: '10px' }}
           key={source.id}
           label={source.name}
-          onClick={createChipSourceClick(source)}
-          icon={selectedSource === source.id ? <Done /> : undefined}
+          onClick={createChipSourceClick(source.id)}
+          color={selectedSource === source.id ? 'primary' : 'default'}
         />
       ))}
     </SourcesList>

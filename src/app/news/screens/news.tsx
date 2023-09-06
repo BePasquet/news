@@ -1,27 +1,21 @@
-import {
-  AppBar,
-  Box,
-  InputAdornment,
-  TextField,
-  Toolbar,
-  Typography,
-} from '@mui/material';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { AppBar, Box, Toolbar, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'src/app/core/redux/redux-hooks';
 
-import { Search } from '@mui/icons-material';
 import { FlexColumnContainer } from 'src/app/shared/components/flex-column-container';
 import { Screen } from 'src/app/shared/components/screen';
 import styled from 'styled-components';
 import { ArticlesList } from '../components/articles-list';
+import { SearchBar } from '../components/search-bar';
 import { SourceFilter } from '../components/sources-filter';
-import { Source } from '../data/interfaces/source.interface';
 import { HeadlinesFilter } from '../services/news.service';
 import { getNewsThunk } from '../state/news.state';
 
+type NewsFilter = Required<Omit<HeadlinesFilter, 'country'>>;
+
 export function News() {
   const dispatch = useDispatch();
-  const [filter, setFilter] = useState<HeadlinesFilter>({
+  const [filter, setFilter] = useState<NewsFilter>({
     query: '',
     sources: '',
   });
@@ -30,19 +24,17 @@ export function News() {
     dispatch(getNewsThunk());
   }, [dispatch]);
 
-  const updateNews = (newFilter: HeadlinesFilter) => {
+  const updateNews = (newFilter: NewsFilter) => {
     setFilter(newFilter);
     dispatch(getNewsThunk(newFilter));
   };
 
-  const handleSourceChange = (source: Source | null) => {
-    const nextFilter = { ...filter, sources: source?.id ?? '' };
-    updateNews(nextFilter);
+  const handleSourceChange = (sourceId: string) => {
+    updateNews({ ...filter, sources: sourceId });
   };
 
-  const handleQueryChange = (ev: ChangeEvent<HTMLInputElement>) => {
-    const nextFilter = { ...filter, query: ev.target.value };
-    updateNews(nextFilter);
+  const handleQueryChange = (query: string) => {
+    updateNews({ ...filter, query });
   };
 
   return (
@@ -56,17 +48,10 @@ export function News() {
           }}
         >
           <Typography variant="h5">News</Typography>
-          <TextField
-            value={filter.query}
+          <SearchBar
+            initialValue={filter.query}
             onChange={handleQueryChange}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Search />
-                </InputAdornment>
-              ),
-            }}
-            variant="standard"
+            debounceTime={300}
           />
         </Toolbar>
       </AppBar>

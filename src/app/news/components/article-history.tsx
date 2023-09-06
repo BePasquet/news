@@ -1,4 +1,10 @@
-import { Dialog, DialogContent, IconButton, Typography } from '@mui/material';
+import {
+  Dialog,
+  DialogContent,
+  IconButton,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 
 import { Close, History } from '@mui/icons-material';
 import { useState } from 'react';
@@ -38,9 +44,12 @@ export function ArticleHistory() {
           )}
         </DialogContent>
       </Dialog>
-      <IconButton onClick={handleHistoryClick}>
-        <History sx={{ color: '#fff' }} />
-      </IconButton>
+
+      <Tooltip title="History">
+        <IconButton onClick={handleHistoryClick}>
+          <History sx={{ color: '#fff' }} />
+        </IconButton>
+      </Tooltip>
     </>
   );
 }

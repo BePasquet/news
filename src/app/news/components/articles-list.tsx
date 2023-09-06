@@ -89,13 +89,15 @@ export function ArticlesList() {
         </DialogContent>
       </Dialog>
 
-      <Results loading={loading || !loaded} error={error} data={news}>
-        {loaded && news.length ? (
-          <ArticlesContainer>{news.map(renderItem)}</ArticlesContainer>
-        ) : (
-          <WarningMessage message="Sorry there are no results" />
-        )}
-      </Results>
+      <div style={{ paddingLeft: error ? '10px' : '0' }}>
+        <Results loading={loading || !loaded} error={error} data={news}>
+          {loaded && news.length ? (
+            <ArticlesContainer>{news.map(renderItem)}</ArticlesContainer>
+          ) : (
+            <WarningMessage message="Sorry there are no results" />
+          )}
+        </Results>
+      </div>
     </>
   );
 }

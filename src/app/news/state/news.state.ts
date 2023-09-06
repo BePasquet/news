@@ -20,7 +20,7 @@ export interface PartialNewsState {
   [NEWS_STATE_KEY]: NewsState;
 }
 
-export const getNews = createAction<HeadlinesFilter>('[News] Get News');
+export const getNews = createAction('[News] Get News');
 
 export const getNewsSuccess = createAction<Article[]>(
   '[News] Get News Success'
@@ -128,7 +128,7 @@ export function createNewsThunk(): GetNewsThunk {
           abortController = new AbortController();
         }
 
-        dispatch(getNews(params));
+        dispatch(getNews());
         isProcessing = true;
         const { articles } = await newsService.getTopHeadlines(
           params,
@@ -150,3 +150,18 @@ export function createNewsThunk(): GetNewsThunk {
 }
 
 export const getNewsThunk = createNewsThunk();
+
+export function getNewsForceErrorThunk(): AppThunk<
+  PartialNewsState,
+  NewsActions
+> {
+  return async (dispatch) => {
+    try {
+      dispatch(getNews());
+      const { data } = await newsService.getSourcesWrong();
+      dispatch(getNewsSuccess(data as Article[]));
+    } catch (e) {
+      dispatch(getNewsFail(parseAxiosError(e)));
+    }
+  };
+}

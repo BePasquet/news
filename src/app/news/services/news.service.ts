@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { environment } from 'src/environments/environment';
 import { SourcesResponse } from '../data/interfaces/sources-response.interface';
 import { TopHeadlinesResponse } from '../data/interfaces/top-headlines-response.interface';
@@ -52,4 +52,8 @@ export async function getSources(): Promise<SourcesResponse> {
   const { data } = await newsApi.get<SourcesResponse>(`/sources`);
 
   return data;
+}
+
+export function getSourcesWrong(): Promise<AxiosResponse<unknown>> {
+  return newsApi.get(`/sources?apiKey`);
 }

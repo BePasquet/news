@@ -22,19 +22,16 @@ export const historySlice = createSlice({
     getHistory(state) {
       state.loading = true;
     },
-
     getHistorySuccess(state, { payload }: PayloadAction<HistoryArticle[]>) {
       state.loading = false;
       state.loaded = true;
       state.data = payload;
     },
-
     getHistoryFail(state, { payload }: PayloadAction<string>) {
       state.loading = false;
       state.loaded = true;
       state.error = payload;
     },
-
     addToHistory(state, { payload }: PayloadAction<HistoryArticle>) {
       state.data.push(payload);
     },

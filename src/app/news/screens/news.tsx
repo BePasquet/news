@@ -5,7 +5,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch } from 'src/app/core/redux/redux-hooks';
 
 import { Error } from '@mui/icons-material';
@@ -15,6 +15,7 @@ import { ArticleHistory } from '../components/article-history';
 import { ArticlesList } from '../components/articles-list';
 import { SearchBar } from '../components/search-bar';
 import { SourceFilter } from '../components/sources-filter';
+import { useFetchNews } from '../hooks/use-fetch-news';
 import { HeadlinesFilter } from '../services/news.service';
 import { getNewsForceErrorThunk, getNewsThunk } from '../state/news.state';
 
@@ -22,14 +23,13 @@ type NewsFilter = Required<Omit<HeadlinesFilter, 'country'>>;
 
 export function News() {
   const dispatch = useDispatch();
+
   const [filter, setFilter] = useState<NewsFilter>({
     query: '',
     sources: '',
   });
 
-  useEffect(() => {
-    dispatch(getNewsThunk());
-  }, [dispatch]);
+  useFetchNews();
 
   const updateNews = (newFilter: NewsFilter) => {
     setFilter(newFilter);
@@ -93,6 +93,7 @@ const NewsToolbar = styled(Toolbar)`
 const Screen = styled.div`
   display: flex;
   flex-direction: column;
+  flex: 1;
 `;
 
 const Container = styled(FlexColumnContainer)`
@@ -106,7 +107,7 @@ const ArticleListContainer = styled(FlexColumnContainer)`
   margin-top: 20px;
 `;
 
-const SourcesContainer = styled(FlexColumnContainer)`
+const SourcesContainer = styled.div`
   padding: 10px;
 `;
 

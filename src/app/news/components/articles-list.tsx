@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'src/app/core/redux/redux-hooks';
+import { FlexColumnContainer } from 'src/app/shared/components/flex-column-container';
 import { Results } from 'src/app/shared/components/results';
 import { WarningMessage } from 'src/app/shared/components/warning-message';
 import styled from 'styled-components';
@@ -89,7 +90,7 @@ export function ArticlesList() {
         </DialogContent>
       </Dialog>
 
-      <div style={{ paddingLeft: error ? '10px' : '0' }}>
+      <FlexColumnContainer style={{ paddingLeft: error ? '10px' : '0' }}>
         <Results loading={loading || !loaded} error={error} data={news}>
           {loaded && news.length ? (
             <ArticlesContainer>{news.map(renderItem)}</ArticlesContainer>
@@ -97,7 +98,7 @@ export function ArticlesList() {
             <WarningMessage message="Sorry there are no results" />
           )}
         </Results>
-      </div>
+      </FlexColumnContainer>
     </>
   );
 }

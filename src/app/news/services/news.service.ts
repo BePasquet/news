@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { environment } from 'src/environments/environment';
+import { HistoryArticle } from '../data/interfaces/history-article.interface';
 import { SourcesResponse } from '../data/interfaces/sources-response.interface';
 import { TopHeadlinesResponse } from '../data/interfaces/top-headlines-response.interface';
 
@@ -56,4 +57,17 @@ export async function getSources(): Promise<SourcesResponse> {
 
 export function getSourcesWrong(): Promise<AxiosResponse<unknown>> {
   return newsApi.get(`/sources?apiKey`);
+}
+
+export const HISTORY_LOCAL_STORAGE_KEY = 'history';
+
+export function getHistory(): HistoryArticle[] {
+  const lsData = localStorage.getItem(HISTORY_LOCAL_STORAGE_KEY);
+  const result = lsData ? JSON.parse(lsData) : [];
+
+  return result;
+}
+
+export function saveHistory(articles: HistoryArticle[]): void {
+  localStorage.setItem(HISTORY_LOCAL_STORAGE_KEY, JSON.stringify(articles));
 }

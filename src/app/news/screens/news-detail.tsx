@@ -83,16 +83,16 @@ const NewsDetailContainer = styled.div`
 `;
 
 const Title = styled(Typography)`
-  font-size: 32px;
+  font-size: 2rem;
   font-weight: bold;
 
   @media screen and (max-width: 600px) {
-    font-size: 28px;
+    font-size: 1.75rem;
   }
 `;
 
 const Description = styled(Typography)`
-  font-size: 18px;
+  font-size: 1.0625rem;
   font-weight: normal;
   color: #6b6b6b;
   margin: 10px 0 0 0;
@@ -107,7 +107,7 @@ const AuthorText = styled(Typography)`
 const PublicationText = styled(Typography)`
   margin: 0;
   color: #6b6b6b;
-  font-size: 14px;
+  font-size: 0.875rem;
 `;
 
 const Link = styled.a`

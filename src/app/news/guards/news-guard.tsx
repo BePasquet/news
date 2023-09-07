@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
 import { useSelector } from 'react-redux';
-import { Results } from 'src/app/shared/components/results';
+import { Results } from 'src/app/shared/components/results/results';
 import { useFetchNews } from '../hooks/use-fetch-news';
 import {
   selectNewsError,

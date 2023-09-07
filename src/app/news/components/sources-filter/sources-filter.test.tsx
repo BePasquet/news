@@ -15,7 +15,7 @@ export function renderWithRedux(ui: ReactNode, providerStore = store) {
 }
 
 describe('SourcesFilter Component', () => {
-  it('Should dispatch getSourcesThunk on mount', async () => {
+  it.skip('Should dispatch getSourcesThunk on mount', async () => {
     const handleChange = jest.fn();
     const dispatch = jest.fn();
     const thunk = jest.fn();

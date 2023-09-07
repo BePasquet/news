@@ -5,7 +5,9 @@
   "scripts": {
     "start": "nx serve",
     "build": "nx build",
-    "test": "nx test"
+    "test": "nx test",
+    "build-production-image": "docker build -t news .",
+    "start-production": "docker run -p 3000:3000 -t news"
   },
   "private": true,
   "dependencies": {

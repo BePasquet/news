@@ -1,6 +1,4 @@
 # News App
-<<<<<<< HEAD
-=======
 
 Assignment for Manantal
 
@@ -40,4 +38,3 @@ Assignment for Manantal
 
 I wrote tests as example will take me to much time to write tests for everything can see examples of a test of state in `src/app/news/state/news.state.test.ts` a component without state `src/app/shared/components/results/results.test.tsx` and a component with state and props `src/app/news/components/sources-filter/sources-filter.test.tsx`, same with comments you can see and example on `src/app/shared/components/results/results.tsx`
 Hope you like it
->>>>>>> dev

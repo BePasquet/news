@@ -1,5 +1,5 @@
 import { ArrowOutward, Edit } from '@mui/icons-material';
-import styled from 'styled-components';
+import { IconButton, Tooltip } from '@mui/material';
 
 export interface ArticleCardToolbarProps {
   onEditClick: () => void;
@@ -12,21 +12,17 @@ export function ArticleCardToolbar({
 }: ArticleCardToolbarProps) {
   return (
     <>
-      <IconButton onClick={onEditClick}>
-        <Edit fontSize="medium" />
-      </IconButton>
+      <Tooltip title="Edit">
+        <IconButton onClick={onEditClick}>
+          <Edit sx={{ color: '#ccc' }} fontSize="medium" />
+        </IconButton>
+      </Tooltip>
 
-      <IconButton onClick={onNavigateClick}>
-        <ArrowOutward fontSize="medium" />
-      </IconButton>
+      <Tooltip title="Open">
+        <IconButton onClick={onNavigateClick}>
+          <ArrowOutward sx={{ color: '#ccc' }} fontSize="medium" />
+        </IconButton>
+      </Tooltip>
     </>
   );
 }
-
-const IconButton = styled.button`
-  border: none;
-  background-color: transparent;
-  padding: 0;
-  color: #ccc;
-  cursor: pointer;
-`;

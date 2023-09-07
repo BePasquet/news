@@ -4,10 +4,12 @@ import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'src/app/core/redux/redux-hooks';
+import { FlexColumnContainer } from 'src/app/shared/components/flex-column-container';
 import { Results } from 'src/app/shared/components/results';
 import { WarningMessage } from 'src/app/shared/components/warning-message';
 import styled from 'styled-components';
 import { Article } from '../data/interfaces/article.interface';
+import { saveToHistoryThunk } from '../state/history.state';
 import {
   selectExistingNews,
   selectNewsError,
@@ -29,8 +31,13 @@ export function ArticlesList() {
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
 
   const handleNavigateClick = useCallback(
-    (article: Article) => navigate(`/news/${article.title}`),
-    [navigate]
+    (article: Article) => {
+      const visitedAt = new Date().toISOString();
+      dispatch(saveToHistoryThunk({ ...article, visitedAt }));
+
+      navigate(`/news/${article.title}`);
+    },
+    [navigate, dispatch]
   );
 
   const handleEditClick = useCallback((article: Article) => {
@@ -83,13 +90,15 @@ export function ArticlesList() {
         </DialogContent>
       </Dialog>
 
-      <Results loading={loading || !loaded} error={error} data={news}>
-        {loaded && news.length ? (
-          <ArticlesContainer>{news.map(renderItem)}</ArticlesContainer>
-        ) : (
-          <WarningMessage message="Sorry there are no results" />
-        )}
-      </Results>
+      <FlexColumnContainer style={{ paddingLeft: error ? '10px' : '0' }}>
+        <Results loading={loading || !loaded} error={error} data={news}>
+          {loaded && news.length ? (
+            <ArticlesContainer>{news.map(renderItem)}</ArticlesContainer>
+          ) : (
+            <WarningMessage message="Sorry there are no results" />
+          )}
+        </Results>
+      </FlexColumnContainer>
     </>
   );
 }

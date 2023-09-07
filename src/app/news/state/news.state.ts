@@ -1,10 +1,4 @@
-import {
-  EntityState,
-  createAction,
-  createEntityAdapter,
-  createReducer,
-  createSelector,
-} from '@reduxjs/toolkit';
+import { createAction, createReducer, createSelector } from '@reduxjs/toolkit';
 import { BaseState } from 'src/app/core/interfaces/base-state.interface';
 import { parseAxiosError } from 'src/app/core/parsers/parse-axios-error';
 import { AppThunk } from 'src/app/core/redux/interfaces/app-thunk.interface';
@@ -14,13 +8,13 @@ import { HeadlinesFilter } from '../services/news.service';
 
 export const NEWS_STATE_KEY = 'news';
 
-export type NewsState = EntityState<Article> & BaseState;
+export type NewsState = BaseState & { data: Article[] };
 
 export interface PartialNewsState {
   [NEWS_STATE_KEY]: NewsState;
 }
 
-export const getNews = createAction<HeadlinesFilter>('[News] Get News');
+export const getNews = createAction('[News] Get News');
 
 export const getNewsSuccess = createAction<Article[]>(
   '[News] Get News Success'
@@ -33,22 +27,22 @@ export const updateArticle = createAction<{
   article: Article;
 }>('[News] Update Article');
 
+export const getNewsCancelled = createAction('[News] Get News Cancelled');
+
 export type NewsActions = ReturnType<
   | typeof getNews
   | typeof getNewsSuccess
   | typeof getNewsFail
   | typeof updateArticle
+  | typeof getNewsCancelled
 >;
 
-export const newsEntityAdapter = createEntityAdapter<Article>({
-  selectId: ({ title }) => title,
-});
-
-export const newsInitialState: NewsState = newsEntityAdapter.getInitialState({
+export const newsInitialState: NewsState = {
+  data: [],
   loading: false,
   loaded: false,
   error: '',
-});
+};
 
 export const newsReducer = createReducer(newsInitialState, (builder) =>
   builder
@@ -59,32 +53,27 @@ export const newsReducer = createReducer(newsInitialState, (builder) =>
       state.loading = false;
       state.loaded = true;
       state.error = '';
-      newsEntityAdapter.setAll(state, payload);
+      state.data = payload;
     })
     .addCase(getNewsFail, (state, { payload }) => {
       state.loading = false;
       state.loaded = true;
       state.error = payload;
     })
-    .addCase(updateArticle, (state, { payload: { id, article } }) =>
-      newsEntityAdapter.updateOne(state, {
-        id,
-        changes: article,
-      })
-    )
+    .addCase(updateArticle, (state, { payload }) => {
+      state.data = state.data.map((article) =>
+        article.title === payload.id ? payload.article : article
+      );
+    })
+    .addCase(getNewsCancelled, (state) => {
+      state.loading = false;
+    })
 );
-
-const { selectAll, selectEntities } = newsEntityAdapter.getSelectors();
 
 export const selectNewsState = (state: PartialNewsState) =>
   state[NEWS_STATE_KEY];
 
-export const selectNews = createSelector(selectNewsState, selectAll);
-
-export const selectNewsEntities = createSelector(
-  selectNewsState,
-  selectEntities
-);
+export const selectNews = createSelector(selectNewsState, ({ data }) => data);
 
 // API brings news that has been removed without content
 export const selectExistingNews = createSelector(selectNews, (news) =>
@@ -106,17 +95,56 @@ export const selectNewsError = createSelector(
   ({ error }) => error
 );
 
-export function getNewsThunk(
-  params: HeadlinesFilter = {}
-): AppThunk<PartialNewsState, NewsActions> {
+export type GetNewsThunk = (
+  params?: HeadlinesFilter
+) => AppThunk<PartialNewsState, NewsActions>;
+
+export function createNewsThunk(): GetNewsThunk {
+  let isProcessing = false;
+  let abortController = new AbortController();
+
+  return (params: HeadlinesFilter = {}) => {
+    return async (dispatch) => {
+      try {
+        if (isProcessing) {
+          abortController.abort();
+          abortController = new AbortController();
+        }
+
+        dispatch(getNews());
+        isProcessing = true;
+        const { articles } = await newsService.getTopHeadlines(
+          params,
+          abortController.signal
+        );
+
+        dispatch(getNewsSuccess(articles));
+      } catch (e) {
+        const action =
+          (e as { code: string }).code === 'ERR_CANCELED'
+            ? getNewsCancelled()
+            : getNewsFail(parseAxiosError(e));
+        dispatch(action);
+      } finally {
+        isProcessing = false;
+      }
+    };
+  };
+}
+
+export const getNewsThunk = createNewsThunk();
+
+export function getNewsForceErrorThunk(): AppThunk<
+  PartialNewsState,
+  NewsActions
+> {
   return async (dispatch) => {
     try {
-      dispatch(getNews(params));
-      const { articles } = await newsService.getTopHeadlines(params);
-      dispatch(getNewsSuccess(articles));
+      dispatch(getNews());
+      const { data } = await newsService.getSourcesWrong();
+      dispatch(getNewsSuccess(data as Article[]));
     } catch (e) {
-      const error = parseAxiosError(e);
-      dispatch(getNewsFail(error));
+      dispatch(getNewsFail(parseAxiosError(e)));
     }
   };
 }

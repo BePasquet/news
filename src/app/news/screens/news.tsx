@@ -1,51 +1,70 @@
-import { AppBar, Toolbar, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import {
+  AppBar,
+  IconButton,
+  Toolbar,
+  Tooltip,
+  Typography,
+} from '@mui/material';
+import { useState } from 'react';
 import { useDispatch } from 'src/app/core/redux/redux-hooks';
 
+import { Error } from '@mui/icons-material';
 import { FlexColumnContainer } from 'src/app/shared/components/flex-column-container';
 import styled from 'styled-components';
+import { ArticleHistory } from '../components/article-history';
 import { ArticlesList } from '../components/articles-list';
 import { SearchBar } from '../components/search-bar';
 import { SourceFilter } from '../components/sources-filter';
+import { useFetchNews } from '../hooks/use-fetch-news';
 import { HeadlinesFilter } from '../services/news.service';
-import { getNewsThunk } from '../state/news.state';
+import { getNewsForceErrorThunk, getNewsThunk } from '../state/news.state';
 
 type NewsFilter = Required<Omit<HeadlinesFilter, 'country'>>;
 
 export function News() {
   const dispatch = useDispatch();
+
   const [filter, setFilter] = useState<NewsFilter>({
     query: '',
     sources: '',
   });
 
-  useEffect(() => {
-    dispatch(getNewsThunk());
-  }, [dispatch]);
+  useFetchNews();
 
   const updateNews = (newFilter: NewsFilter) => {
     setFilter(newFilter);
     dispatch(getNewsThunk(newFilter));
   };
 
-  const handleSourceChange = (sourceId: string) => {
+  const handleSourceChange = (sourceId: string) =>
     updateNews({ ...filter, sources: sourceId });
-  };
 
-  const handleQueryChange = (query: string) => {
-    updateNews({ ...filter, query });
-  };
+  const handleQueryChange = (query: string) => updateNews({ ...filter, query });
+
+  const handleForceError = () => dispatch(getNewsForceErrorThunk());
 
   return (
     <Screen>
       <AppBar position="relative">
         <NewsToolbar>
           <Typography variant="h5">News</Typography>
-          <SearchBar
-            initialValue={filter.query}
-            onChange={handleQueryChange}
-            debounceTime={300}
-          />
+          <ToolbarActionsContainer>
+            <SearchBar
+              initialValue={filter.query}
+              onChange={handleQueryChange}
+              debounceTime={500}
+            />
+
+            <div style={{ marginLeft: '10px' }}>
+              <ArticleHistory />
+            </div>
+
+            <Tooltip title="Force error">
+              <IconButton onClick={handleForceError}>
+                <Error sx={{ color: '#fff' }} />
+              </IconButton>
+            </Tooltip>
+          </ToolbarActionsContainer>
         </NewsToolbar>
       </AppBar>
 
@@ -74,6 +93,7 @@ const NewsToolbar = styled(Toolbar)`
 const Screen = styled.div`
   display: flex;
   flex-direction: column;
+  flex: 1;
 `;
 
 const Container = styled(FlexColumnContainer)`
@@ -87,8 +107,13 @@ const ArticleListContainer = styled(FlexColumnContainer)`
   margin-top: 20px;
 `;
 
-const SourcesContainer = styled(FlexColumnContainer)`
+const SourcesContainer = styled.div`
   padding: 10px;
+`;
+
+const ToolbarActionsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
 `;
 
 export default News;

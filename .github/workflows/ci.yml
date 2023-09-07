@@ -15,5 +15,5 @@ jobs:
 
       - run: npx nx format:check
       - run: npx nx lint --parallel=3
-      - run: npx nx test --parallel=3 --configuration=ci
+      - run: npx nx test --configuration=ci
       - run: npx nx build --parallel=3

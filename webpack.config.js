@@ -5,5 +5,9 @@ const { withReact } = require('@nx/react');
 module.exports = composePlugins(withNx(), withReact(), (config) => {
   // Update the webpack config as needed here.
   // e.g. `config.plugins.push(new MyPlugin())`
+  config.resolve.alias = {
+    ...config.resolve.alias,
+    '@mui/styled-engine': '@mui/styled-engine-sc',
+  };
   return config;
 });

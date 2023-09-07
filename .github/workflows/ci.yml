@@ -1,0 +1,19 @@
+name: CI
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - run: npm ci
+
+      - run: npx nx format:check
+      - run: npx nx lint --parallel=3
+      - run: npx nx test --parallel=3 --configuration=ci
+      - run: npx nx build --parallel=3

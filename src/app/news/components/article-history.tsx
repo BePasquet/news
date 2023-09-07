@@ -6,7 +6,7 @@ import {
   Typography,
 } from '@mui/material';
 
-import { Close, History } from '@mui/icons-material';
+import { ArrowOutward, Close, History } from '@mui/icons-material';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { WarningMessage } from 'src/app/shared/components/warning-message';
@@ -38,7 +38,18 @@ export function ArticleHistory() {
         </HeaderContainer>
         <DialogContent>
           {history.length ? (
-            history.map(({ title }) => <ListItem key={title}>{title}</ListItem>)
+            history.map(({ title, url }) => (
+              <ListItem key={title}>
+                <span>{title}</span>
+                <Tooltip title="Open">
+                  <a href={url} target="_blank" rel="noreferrer">
+                    <IconButton>
+                      <ArrowOutward color="primary" fontSize="medium" />
+                    </IconButton>
+                  </a>
+                </Tooltip>
+              </ListItem>
+            ))
           ) : (
             <WarningMessage message="You haven't visit any article yet" />
           )}
@@ -62,8 +73,12 @@ const HeaderContainer = styled.div`
   padding: 10px 10px 10px 24px;
 `;
 
-const ListItem = styled.p`
+const ListItem = styled.div`
   margin: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
   border-top: 1px solid #eee;
   padding: 20px 0;
 

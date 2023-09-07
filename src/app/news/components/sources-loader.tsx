@@ -7,7 +7,7 @@ export interface SourceSkeletonProps {
 
 export function SourcesLoader({ count }: SourceSkeletonProps) {
   return (
-    <SourcesLoaderContainer>
+    <SourcesLoaderContainer data-testid="source-loader">
       {Array(count)
         .fill(null)
         .map((_, i) => (

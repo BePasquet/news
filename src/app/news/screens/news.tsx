@@ -14,7 +14,7 @@ import styled from 'styled-components';
 import { ArticleHistory } from '../components/article-history';
 import { ArticlesList } from '../components/articles-list';
 import { SearchBar } from '../components/search-bar';
-import { SourceFilter } from '../components/sources-filter';
+import { SourceFilter } from '../components/sources-filter/sources-filter';
 import { HeadlinesFilter } from '../services/news.service';
 import { getNewsForceErrorThunk, getNewsThunk } from '../state/news.state';
 

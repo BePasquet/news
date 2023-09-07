@@ -5,12 +5,13 @@ import { useDispatch } from 'src/app/core/redux/redux-hooks';
 import { Results } from 'src/app/shared/components/results/results';
 import styled from 'styled-components';
 import {
-  selectNewsError,
-  selectNewsLoaded,
-  selectNewsLoading,
-} from '../state/news.state';
-import { getSourcesThunk, selectSources } from '../state/sources.state';
-import { SourcesLoader } from './sources-loader';
+  getSourcesThunk,
+  selectSources,
+  selectSourcesError,
+  selectSourcesLoaded,
+  selectSourcesLoading,
+} from '../../state/sources.state';
+import { SourcesLoader } from '../sources-loader';
 
 export interface SourceFilterProps {
   selectedSource: string;
@@ -23,9 +24,9 @@ export function SourceFilter({
 }: SourceFilterProps) {
   const dispatch = useDispatch();
   const sources = useSelector(selectSources);
-  const loading = useSelector(selectNewsLoading);
-  const loaded = useSelector(selectNewsLoaded);
-  const error = useSelector(selectNewsError);
+  const loading = useSelector(selectSourcesLoading);
+  const loaded = useSelector(selectSourcesLoaded);
+  const error = useSelector(selectSourcesError);
 
   useEffect(() => {
     dispatch(getSourcesThunk());
@@ -47,11 +48,12 @@ export function SourceFilter({
       loaderComponent={<SourcesLoader count={6} />}
     >
       {loaded && (
-        <SourcesList>
+        <SourcesList data-testid="sources-list">
           <Chip
             label="All"
             onClick={createChipSourceClick('')}
             color={selectedSource === '' ? 'primary' : 'default'}
+            className={selectedSource === '' ? 'active' : ''}
           />
 
           {sources.map((source) => (
@@ -61,6 +63,7 @@ export function SourceFilter({
               label={source.name}
               onClick={createChipSourceClick(source.id)}
               color={selectedSource === source.id ? 'primary' : 'default'}
+              className={selectedSource === source.id ? 'active' : ''}
             />
           ))}
         </SourcesList>

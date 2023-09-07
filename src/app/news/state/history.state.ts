@@ -17,7 +17,7 @@ export const historyInitialState: HistoryState = {
   error: '',
 };
 
-const historySlice = createSlice({
+export const historySlice = createSlice({
   initialState: historyInitialState,
   name: 'history',
   reducers: {

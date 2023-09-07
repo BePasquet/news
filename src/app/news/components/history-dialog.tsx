@@ -10,7 +10,7 @@ import { ArrowOutward, Close } from '@mui/icons-material';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'src/app/core/redux/redux-hooks';
-import { Results } from 'src/app/shared/components/results';
+import { Results } from 'src/app/shared/components/results/results';
 import { WarningMessage } from 'src/app/shared/components/warning-message';
 import styled from 'styled-components';
 import {

@@ -1,7 +1,7 @@
 import { PropsWithChildren, ReactNode } from 'react';
 import { BaseState } from 'src/app/core/interfaces/base-state.interface';
-import { CenterLoader } from './center-loader';
-import { WarningMessage } from './warning-message';
+import { CenterLoader } from '../center-loader';
+import { WarningMessage } from '../warning-message';
 
 export interface ResultsProps<T = unknown> extends Omit<BaseState, 'loaded'> {
   data?: T;

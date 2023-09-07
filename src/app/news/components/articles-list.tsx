@@ -5,7 +5,7 @@ import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'src/app/core/redux/redux-hooks';
 import { FlexColumnContainer } from 'src/app/shared/components/flex-column-container';
-import { Results } from 'src/app/shared/components/results';
+import { Results } from 'src/app/shared/components/results/results';
 import { WarningMessage } from 'src/app/shared/components/warning-message';
 import styled from 'styled-components';
 import { Article } from '../data/interfaces/article.interface';

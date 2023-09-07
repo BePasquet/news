@@ -2,7 +2,7 @@ import { Chip } from '@mui/material';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'src/app/core/redux/redux-hooks';
-import { Results } from 'src/app/shared/components/results';
+import { Results } from 'src/app/shared/components/results/results';
 import styled from 'styled-components';
 import {
   selectNewsError,

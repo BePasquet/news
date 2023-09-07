@@ -162,7 +162,6 @@ describe('News State', () => {
         null
       );
 
-      console.log(dispatch.mock.calls);
       expect(dispatch).toHaveBeenNthCalledWith(1, getNews());
       expect(dispatch).toHaveBeenNthCalledWith(2, getNews());
       expect(dispatch).toHaveBeenNthCalledWith(3, getNewsCancelled());

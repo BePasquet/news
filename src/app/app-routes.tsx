@@ -23,6 +23,7 @@ export function AppRoutes() {
           />
           <Route path="/news" element={<News />} />
           <Route path="/" element={<Navigate to="/news" />} />
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>
     </Suspense>

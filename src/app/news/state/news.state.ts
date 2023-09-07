@@ -60,9 +60,9 @@ export const newsReducer = createReducer(newsInitialState, (builder) =>
       state.loaded = true;
       state.error = payload;
     })
-    .addCase(updateArticle, (state, { payload: { id, article } }) => {
-      state.data = state.data.map((news) =>
-        news.title === id ? article : news
+    .addCase(updateArticle, (state, { payload }) => {
+      state.data = state.data.map((article) =>
+        article.title === payload.id ? payload.article : article
       );
     })
     .addCase(getNewsCancelled, (state) => {

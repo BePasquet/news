@@ -9,7 +9,7 @@ import { selectNews } from '../state/news.state';
 export function NewsDetail() {
   const { title } = useParams();
   const articles = useSelector(selectNews);
-  const article = articles.find((x) => x.title === title);
+  const article = articles.find((element) => element.title === title);
 
   if (!article) {
     return (

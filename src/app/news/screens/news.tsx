@@ -5,7 +5,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'src/app/core/redux/redux-hooks';
 
 import { Error } from '@mui/icons-material';
@@ -14,8 +14,7 @@ import styled from 'styled-components';
 import { ArticleHistory } from '../components/article-history';
 import { ArticlesList } from '../components/articles-list';
 import { SearchBar } from '../components/search-bar';
-import { SourceFilter } from '../components/sources-filter';
-import { useFetchNews } from '../hooks/use-fetch-news';
+import { SourceFilter } from '../components/sources-filter/sources-filter';
 import { HeadlinesFilter } from '../services/news.service';
 import { getNewsForceErrorThunk, getNewsThunk } from '../state/news.state';
 
@@ -29,7 +28,9 @@ export function News() {
     sources: '',
   });
 
-  useFetchNews();
+  useEffect(() => {
+    dispatch(getNewsThunk());
+  }, [dispatch]);
 
   const updateNews = (newFilter: NewsFilter) => {
     setFilter(newFilter);
